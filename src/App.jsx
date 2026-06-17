@@ -12,6 +12,7 @@ function App() {
 
   const [data] = useState(db)
   const [studyData] = useState(studyDb)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   const downloadFileAtURL = (url) => {
     const fileName = url.split('/').pop()
@@ -35,11 +36,16 @@ function App() {
     document.querySelector('body').setAttribute('data-theme', 'dark')
   }
 
-  const toggletheme = (e) => {
-    e.target.checked ? setDarkMode() : setLightMode()
+  const toggletheme = () => {
+    setIsDarkMode((currentMode) => {
+      const nextMode = !currentMode
+      nextMode ? setDarkMode() : setLightMode()
+      return nextMode
+    })
   }
 
-  const handleLinkClick = (elementId) => {
+  const handleLinkClick = (event, elementId) => {
+    event.preventDefault()
     setMenuOpen(false)
 
     setTimeout(() => {
@@ -66,31 +72,35 @@ function App() {
           <nav className="navigation">
             <ul className={menuOpen ? 'show' : ''}>
               <li>
-                <a href="#" onClick={() => handleLinkClick('inicio')}>
+                <a href="#inicio" onClick={(event) => handleLinkClick(event, 'inicio')}>
                   Sobre mi
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => handleLinkClick('experience')}>
+                <a href="#experience" onClick={(event) => handleLinkClick(event, 'experience')}>
                   Experiencia
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => handleLinkClick('estudios')}>
+                <a href="#estudios" onClick={(event) => handleLinkClick(event, 'estudios')}>
                   Estudios
                 </a>
               </li>
               <li>
-                <a href="#" onClick={() => handleLinkClick('contacta')}>
+                <a href="#contacta" onClick={(event) => handleLinkClick(event, 'contacta')}>
                   Contacto
                 </a>
               </li>
-              <label className="switch">
+              <label className="switch" aria-label="Cambiar tema claro u oscuro">
                 <input
                   type="checkbox"
+                  checked={isDarkMode}
                   onChange={toggletheme}
                 />
-                <span className="slider"></span>
+                <span className="slider" aria-hidden="true">
+                  <span className="theme-icon theme-icon-sun"></span>
+                  <span className="theme-icon theme-icon-moon"></span>
+                </span>
               </label>
             </ul>
           </nav>
